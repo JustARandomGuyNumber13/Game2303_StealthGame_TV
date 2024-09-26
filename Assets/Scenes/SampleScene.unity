@@ -340,7 +340,7 @@ Transform:
   m_GameObject: {fileID: 409558851}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.37, y: 0.64, z: -21.08}
+  m_LocalPosition: {x: 2.37, y: 0.64, z: -1.48}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -715,8 +715,8 @@ GameObject:
   - component: {fileID: 931642116}
   - component: {fileID: 931642115}
   - component: {fileID: 931642114}
-  - component: {fileID: 931642113}
   - component: {fileID: 931642119}
+  - component: {fileID: 931642120}
   m_Layer: 0
   m_Name: Bot 1
   m_TagString: Untagged
@@ -724,24 +724,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &931642113
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 931642112}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1560710e56f94f418f4faac162e0a29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 409558855}
-  inSightCheckObject: {fileID: 1993723039}
-  inSightIndicatorObject: {fileID: 1102757825}
-  viewDistance: 10
-  viewAngle: 45
-  isDisplayIndicator: 1
 --- !u!195 &931642114
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -866,16 +848,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8108123587276cf40a80f54d1d55617a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sightCheck: {fileID: 931642113}
+  sightCheck: {fileID: 931642120}
+  inSightIndicatorObject: {fileID: 1102757825}
   target: {fileID: 409558855}
+  displayInSightIndicator: 1
   checkIfUnderstand: 1
   isRotate: 0
   rotateSpeed: 50
   isLookAtTarget: 0
   rotateToPlayerDirectionSpeed: 3
-  isChaseTarget: 1
+  isChaseTarget: 0
   chaseSpeed: 5
   chaseRotateSpeed: 10
+--- !u!114 &931642120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 931642112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c908a71d039e4f4f9023862ffd4f909, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distance: 10
+  angle: 250
+  target: {fileID: 409558855}
+  displayGizmos: 1
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1029,8 +1029,8 @@ Transform:
   m_GameObject: {fileID: 1993723038}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 9.238795}
-  m_LocalScale: {x: 7.6536694, y: 0.1, z: 0.1}
+  m_LocalPosition: {x: 0, y: 0, z: -7.071068}
+  m_LocalScale: {x: 14.142136, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 931642118}

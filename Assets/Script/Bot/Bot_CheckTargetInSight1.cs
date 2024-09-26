@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
+using static UnityEditor.PlayerSettings;
 
-public class Bot_CheckTargetInSight : MonoBehaviour
+/*
+ *  Can't detect target if viewAngle is over 170 degrees    // CANCEL THIS SCIPT
+ */
+public class Bot_CheckTargetInSight1 : MonoBehaviour
 {
     [SerializeField] Transform target;
     [SerializeField] Transform inSightCheckObject;  // A child Square with isTrigger collider
-    [SerializeField] GameObject inSightIndicatorObject;   // Yellow ! indicate when player's in sight
     [SerializeField] float viewDistance, viewAngle;
     [SerializeField] bool isDisplayIndicator;
     
@@ -46,25 +49,11 @@ public class Bot_CheckTargetInSight : MonoBehaviour
                     if (Vector3.Distance(transform.position, target.position) > Vector3.Distance(basePos, other.transform.position))  // Check if any object's blocking the view
                     isCanSeePlayer = false;
             }
-            print("Is in sight angle: " + isInSightAngle + ", is can see player: " + isCanSeePlayer);
-        }
-        //print("Is in sight angle: " + isInSightAngle + ", is can see player: " + isCanSeePlayer);
+            Vector3 f = transform.forward * viewDistance;
+            print(Vector3.Distance(f, target.position) < Vector3.Distance(f, rightPos));
 
-        if (isDisplayIndicator) DisplayInSightCheck();
+        }
         return isInSightAngle && isCanSeePlayer;
-    }
-    private void DisplayInSightCheck()  // Display "!" when object is clearly looking at target
-    { 
-        if (isInSightAngle && isCanSeePlayer)   
-        {
-            if (!inSightIndicatorObject.activeInHierarchy)
-                inSightIndicatorObject.SetActive(true);
-        }
-        else
-        {
-            if (inSightIndicatorObject.activeInHierarchy)
-                inSightIndicatorObject.SetActive(false);
-        }
     }
     private void GetViewPoints()
     {
