@@ -15,17 +15,23 @@ public class Bot_Behavior : MonoBehaviour
     [SerializeField] bool checkIfUnderstand;
 
     [Header("Case 1: Rotate this object")]
-    [SerializeField] bool isRotate;
+    [SerializeField] bool isCase1;
     [SerializeField] float rotateSpeed;
 
     [Header("Case 2: Look at player")]
-    [SerializeField] bool isLookAtTarget;
+    [SerializeField] bool isCase2;
     [SerializeField] float rotateToPlayerDirectionSpeed;
 
     [Header("Case 3: Chase player")]
-    [SerializeField] bool isChaseTarget;
+    [SerializeField] bool isCase3;
     [SerializeField] float chaseSpeed;
     [SerializeField] float chaseRotateSpeed;
+
+    [Header("Case 4: All + Shoot target")]
+    [SerializeField] bool isCase4;
+    [SerializeField] float shootChaseSpeed, shootChaseRotateSpeed, shootDelay;
+    [SerializeField] GameObject projectile;
+    float shootDelayCount;
 
     bool isTargetInSight;
     NavMeshAgent agent;
@@ -41,23 +47,32 @@ public class Bot_Behavior : MonoBehaviour
         if (checkIfUnderstand)
         {
             int count = 0;
-            if (isRotate) count++;
-            if (isLookAtTarget) count++;
-            if (isChaseTarget) count++;
+            if (isCase1) count++;
+            if (isCase2) count++;
+            if (isCase3) count++;
+            if (isCase4) count++;
 
             if (count <= 1)
             {
                 isTargetInSight = sightCheck.IsCanSeeTarget();
 
                 if (displayInSightIndicator) DisplayInSightCheck();
-                if (isRotate) RotateObject();
-                if (isTargetInSight)
+                if (isCase4) shootDelayCount -= Time.deltaTime;
+
+                if (isCase1) RotateObject();
+                else if (isTargetInSight)
                 {
-                    if (isLookAtTarget) LookAtTarget(rotateToPlayerDirectionSpeed);
-                    if (isChaseTarget)
+                    if (isCase2) LookAtTarget(rotateToPlayerDirectionSpeed);
+                    else if (isCase3)
                     {
                         LookAtTarget(chaseRotateSpeed);
-                        ChaseTarget(); 
+                        ChaseTarget(chaseSpeed);
+                    }
+                    else if (isCase4)
+                    {
+                        LookAtTarget(shootChaseRotateSpeed);
+                        ChaseTarget(shootChaseSpeed);
+                        ShootTarget();
                     }
                 }
             }
@@ -76,10 +91,10 @@ public class Bot_Behavior : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(direction);
         myTransform.rotation = Quaternion.Slerp(myTransform.rotation, lookRotation, speed * Time.deltaTime);
     }
-    private void ChaseTarget()
+    private void ChaseTarget(float speed)
     {
         agent.SetDestination(target.position);
-        agent.speed = chaseSpeed;
+        agent.speed = speed;
     }
     private void DisplayInSightCheck()  // Display "!" when object is clearly looking at target
     {
@@ -92,6 +107,15 @@ public class Bot_Behavior : MonoBehaviour
         {
             if (inSightIndicatorObject.activeInHierarchy)
                 inSightIndicatorObject.SetActive(false);
+        }
+    }
+    private void ShootTarget()
+    {
+        if (projectile == null) return;
+        if (shootDelayCount <= 0)
+        {
+            Instantiate(projectile, myTransform.position + transform.forward * 1, Quaternion.LookRotation(target.position - transform.position));
+            shootDelayCount = shootDelay;
         }
     }
 }

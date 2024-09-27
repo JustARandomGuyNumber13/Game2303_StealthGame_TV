@@ -13,30 +13,20 @@ public class Bot_CheckTargetInSight2 : MonoBehaviour
     {
         if (!displayGizmos) return;
 
-        float xOffset = Mathf.Sin(Mathf.Deg2Rad * (angle / 2)) * distance;
+        float xOffset = Mathf.Sin(Mathf.Deg2Rad * (angle / 2)) * distance;  // Caculate points' positions on screen
         float zOffset = Mathf.Cos(Mathf.Deg2Rad * (angle / 2)) * distance;
 
-        Vector3 basePos = transform.position;
+        Vector3 basePos = transform.position;      
         Vector3 midPos = basePos + transform.forward * distance;
         Vector3 rightPos = basePos + transform.forward * zOffset + transform.right * xOffset;
         Vector3 leftPos = basePos + transform.forward * zOffset + transform.right * -xOffset;
-        Vector3 targetPos = new Vector3(target.position.x, basePos.y, target.position.z);
-
-        float AB = Vector3.Distance(midPos, basePos);
-        float AC = Vector3.Distance(basePos, targetPos);
-        float BC = Vector3.Distance(midPos, targetPos);
-
-        float cosO = (AB * AB + AC * AC - BC * BC) / (2 * AB * AC);
-        float resultAngleInRadian = Mathf.Acos(cosO);
-        float resultAngleInDegree = Mathf.Rad2Deg * resultAngleInRadian;
 
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(basePos, distance);
-        Gizmos.DrawLine(basePos, midPos);
         Gizmos.DrawLine(leftPos, basePos);
         Gizmos.DrawLine(rightPos, basePos);
-        Gizmos.DrawLine(leftPos, midPos);
-        Gizmos.DrawLine(rightPos, midPos);
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(basePos, midPos);
     }
 
     public bool IsCanSeeTarget()
@@ -45,26 +35,26 @@ public class Bot_CheckTargetInSight2 : MonoBehaviour
         {
             Vector3 basePos = transform.position;
             Vector3 midPos = basePos + transform.forward * distance;
-            Vector3 targetPos = new Vector3(target.position.x, basePos.y, target.position.z);
+            Vector3 targetPos = new Vector3(target.position.x, basePos.y, target.position.z);   // Match object's height
 
             float AB = Vector3.Distance(midPos, basePos);
             float AC = Vector3.Distance(basePos, targetPos);
             float BC = Vector3.Distance(midPos, targetPos);
 
-            float cosO = (AB * AB + AC * AC - BC * BC) / (2 * AB * AC);
+            float cosO = (AB * AB + AC * AC - BC * BC) / (2 * AB * AC);     // Calculate angle between target and mid point
             float resultAngleInRadian = Mathf.Acos(cosO);
             float resultAngleInDegree = Mathf.Rad2Deg * resultAngleInRadian;
 
-            Vector3 rayCastDirection = (target.position - basePos).normalized;
-            RaycastHit hit;
-            Physics.Raycast(basePos, rayCastDirection, out hit);
-
-            if (displayGizmos)
+            if (displayGizmos)  // Display raycast if want to
             {
                 Vector3 tPos = new Vector3(target.position.x, basePos.y, target.position.z);
                 Vector3 direction = (tPos - basePos).normalized;
                 Debug.DrawRay(basePos, direction * distance, Color.black);
             }
+
+            Vector3 rayCastDirection = (target.position - basePos).normalized;  // Cast ray to check if the first object that is looking at is the target
+            RaycastHit hit;
+            Physics.Raycast(basePos, rayCastDirection, out hit);
 
             bool isCanSeeTarget = false;
             if(hit.collider != null)
